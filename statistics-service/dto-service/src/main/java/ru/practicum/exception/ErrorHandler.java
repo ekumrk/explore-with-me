@@ -12,7 +12,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEntityInvalidException(final EntityValidationException e) {
+    public ErrorResponse handleEntityInvalidException(final StatsValidationException e) {
         return new ErrorResponse(
                 e.getMessage()
         );
@@ -20,7 +20,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleEntityNotFoundException(final EntityNotFoundException e) {
+    public ErrorResponse handleEntityNotFoundException(final StatsNotFoundException e) {
         return new ErrorResponse(
                 e.getMessage()
         );

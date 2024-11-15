@@ -5,3 +5,5 @@ create table if not exists statistics (
     ip varchar,
     request_date timestamp WITHOUT TIME ZONE
 );
+
+CREATE INDEX IF NOT EXISTS uris_index ON statistics(uri);
