@@ -1,8 +1,5 @@
 package ru.practicum.client;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,6 +9,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 public class BaseClient {
     protected final RestTemplate rest;
 
@@ -20,11 +20,7 @@ public class BaseClient {
     }
 
     protected <T> ResponseEntity<Object> post(String path, T body) {
-        return post(path, null, body);
-    }
-
-    protected <T> ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
-        return makeAndSendRequest(HttpMethod.POST, path, parameters, body);
+        return makeAndSendRequest(HttpMethod.POST, path, null, body);
     }
 
     protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
@@ -58,9 +54,6 @@ public class BaseClient {
     }
 
     private static ResponseEntity<Object> prepareGatewayResponse(ResponseEntity<Object> response) {
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response;
-        }
 
         ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(response.getStatusCode());
 
