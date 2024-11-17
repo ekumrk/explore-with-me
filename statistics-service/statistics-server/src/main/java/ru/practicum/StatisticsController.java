@@ -14,6 +14,7 @@ import ru.practicum.dto.OutputStatsDto;
 import ru.practicum.exception.StatsValidationException;
 import ru.practicum.service.StatisticsService;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class StatisticsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public InputEventDto saveEventStats(@RequestBody InputEventDto dto) {
+    public InputEventDto saveEventStats(@RequestBody @Valid InputEventDto dto) {
         return service.saveEventStats(dto);
     }
 

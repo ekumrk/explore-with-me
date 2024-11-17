@@ -4,10 +4,10 @@
     <file url="file://$PROJECT_DIR$/event-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/statistics-service/dto-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/statistics-service/http-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/statistics-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/statistics-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/statistics-service/statistics-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/statistics-service/supportive-service/src/main/java" charset="UTF-8" />
   </component>
 </project>

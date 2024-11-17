@@ -36,7 +36,7 @@ public class RequestServiceImpl implements RequestService {
     private final RequestMapper mapper;
 
     @Override
-    public ParticipationRequestDto addNewRequest(Long userId, Long eventId) {
+    public ParticipationRequestDto addNewRequest(Long userId, Long eventId) throws NullPointerException {
         LocalDateTime created = LocalDateTime.now();
         Optional<Request> previous = repository.findFirstByEventIdAndRequesterId(eventId, userId);
 

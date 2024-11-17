@@ -12,6 +12,6 @@ import java.util.List;
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
     @Query("SELECT c " +
             "FROM Compilation c " +
-            "WHERE c.pinned = ?1 OR c.pinned IS NULL ")
+            "WHERE c.pinned = ?1 ")
     List<Compilation> getCompilationsPublic(boolean pinned, Pageable page);
 }
