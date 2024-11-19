@@ -14,7 +14,7 @@ public interface StatisticsRepository extends JpaRepository<Stats, Long> {
     @Query(" SELECT new ru.practicum.dto.OutputStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
             "FROM Stats s " +
             "WHERE s.requestDate BETWEEN ?1 AND ?2 " +
-            "AND (s.uri IN (?3) OR (?3) is NULL) " +
+            "AND ( (s.uri IN (?3)) OR ((?3) is null) ) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC ")
     List<OutputStatsDto> findUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris);
@@ -22,7 +22,7 @@ public interface StatisticsRepository extends JpaRepository<Stats, Long> {
     @Query(" SELECT new ru.practicum.dto.OutputStatsDto(s.app, s.uri, COUNT(s.ip)) " +
             "FROM Stats s " +
             "WHERE s.requestDate BETWEEN ?1 AND ?2 " +
-            "AND (s.uri IN (?3) OR (?3) is NULL) " +
+            "AND ( (s.uri IN (?3)) OR ((?3) is null) ) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC ")
     List<OutputStatsDto> findStats(LocalDateTime start, LocalDateTime end, List<String> uris);
