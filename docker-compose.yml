@@ -1,31 +1,7 @@
 version: '3.1'
 services:
 
-  ewm-db:
-    image: postgres:14-alpine
-    container_name: events_postgres_container
-    ports:
-      - "6542:5432"
-    environment:
-      - POSTGRES_DB=event-db
-      - POSTGRES_USER=iameventroot
-      - POSTGRES_PASSWORD=iameventroot
-
-  ewm-service:
-    build: event-service
-    container_name: event_service_container
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-    depends_on:
-      - ewm-db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/event-db
-      - SPRING_DATASOURCE_USERNAME=iameventroot
-      - SPRING_DATASOURCE_PASSWORD=iameventroot
-      - STATS_SERVER_URL=http://stats-server:9090
-
-  stats-db:
+  statistics-db:
     image: postgres:14-alpine
     container_name: statistics_postgres_container
     ports:
@@ -35,15 +11,15 @@ services:
       - POSTGRES_USER=iamstatsroot
       - POSTGRES_PASSWORD=iamstatsroot
 
-  stats-server:
+  statistics-server:
     build: statistics-service/statistics-server
-    container_name: statistics_service_container
+    image: statistics_server_image
+    container_name: statistics_server_container
     ports:
       - "9090:9090"
-      - "9091:9091"
     depends_on:
-      - stats-db
+      - statistics-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statistics-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://statistics-db:5432/statistics-db
       - SPRING_DATASOURCE_USERNAME=iamstatsroot
       - SPRING_DATASOURCE_PASSWORD=iamstatsroot
