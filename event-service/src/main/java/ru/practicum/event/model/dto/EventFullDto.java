@@ -7,11 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.category.model.dto.CategoryDto;
+import ru.practicum.comment.model.dto.CommentInfoDto;
 import ru.practicum.event.model.EventState;
 import ru.practicum.location.model.dto.LocationDto;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.practicum.constants.Constants.DATE_TIME_FORMAT;
 
@@ -55,4 +58,6 @@ public class EventFullDto {
     private String title;
 
     private long views;
+
+    private List<CommentInfoDto> comments = new ArrayList<>();
 }

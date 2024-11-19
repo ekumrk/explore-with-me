@@ -16,9 +16,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e " +
             "FROM Event e " +
-            "WHERE ( (e.initiator.id IN (?1))) " +
-            "AND ( (e.state IN (?2)) ) " +
-            "AND ( (e.category.id IN (?3)) ) " +
+            "WHERE ( (e.initiator.id IN (?1)) OR ((?1) is NULL) ) " +
+            "AND ( (e.state IN (?2)) OR ((?2) is NULL) ) " +
+            "AND ( (e.category.id IN (?3)) OR ((?3) is NULL) ) " +
             "AND (e.eventDate BETWEEN ?4 AND ?5) ")
     List<Event> findAllByAdmin(List<Long> users, List<EventState> states, List<Integer> categories,
                                LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable page);
@@ -30,8 +30,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "LOWER(e.annotation) LIKE LOWER(CONCAT('%', ?1, '%')) " +
             "OR LOWER(e.description) LIKE LOWER(CONCAT('%', ?1, '%'))" +
             ") " +
-            "AND ( (e.category.id IN (?2)) ) " +
-            "AND ( (e.paid = ?3) ) " +
+            "AND ( (e.category.id IN (?2)) OR ((?2) IS NULL) ) " +
+            "AND ( (e.paid = ?3) OR (?3 IS NULL) ) " +
             "AND (e.eventDate BETWEEN ?4 AND ?5)")
     List<Event> findAllByPublic(String text, List<Integer> categories, Boolean paid,
                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable page);

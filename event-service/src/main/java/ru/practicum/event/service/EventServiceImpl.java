@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.client.StatisticsClient;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.model.CommentMapper;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.dto.InputEventDto;
 import ru.practicum.dto.OutputStatsDto;
 import ru.practicum.event.model.Event;
@@ -49,9 +52,11 @@ public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final UserRepository userRepository;
     private final RequestsRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final CategoryService categoryService;
     private final LocationService locationService;
     private final EventMapper mapper;
+    private final CommentMapper commentMapper;
     private final StatisticsClient statsClient;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
@@ -106,7 +111,7 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        return mapper.mapEventToEventFullDto(repository.saveAndFlush(event));
+        return setComments(repository.saveAndFlush(event));
     }
 
     @Override
@@ -130,7 +135,7 @@ public class EventServiceImpl implements EventService {
             throw new ConflictException("User is not initiator of event");
         }
 
-        return mapper.mapEventToEventFullDto(event);
+        return setComments(event);
     }
 
     @Transactional
@@ -161,7 +166,7 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        return mapper.mapEventToEventFullDto(repository.saveAndFlush(event));
+        return setComments(repository.saveAndFlush(event));
     }
 
     @Override
@@ -176,10 +181,11 @@ public class EventServiceImpl implements EventService {
         }
 
         List<Event> list = repository.findAllByAdmin(users, states, categories, start, end, page);
-        return list.stream()
-                .peek(event -> event.setConfirmedRequests(getConfirmedRequests(event.getId())))
-                .map(mapper::mapEventToEventFullDto)
-                .collect(Collectors.toUnmodifiableList());
+        return setComments(
+                list.stream()
+                        .peek(event -> event.setConfirmedRequests(getConfirmedRequests(event.getId())))
+                        .collect(Collectors.toUnmodifiableList())
+        );
     }
 
     @Override
@@ -266,7 +272,7 @@ public class EventServiceImpl implements EventService {
 
         List<OutputStatsDto> stats = statsClient.getStats(event.getPublishedOn().format(formatter),
                 LocalDateTime.now().plusYears(100).format(formatter), List.of(request.getRequestURI()), true);
-        EventFullDto dto = mapper.mapEventToEventFullDto(event);
+        EventFullDto dto = setComments(event);
         dto.setViews(stats.isEmpty() ? 0L : stats.get(0).getHits());
         dto.setConfirmedRequests(getConfirmedRequests(dto.getId()));
         return dto;
@@ -343,5 +349,31 @@ public class EventServiceImpl implements EventService {
             Location loc = locationService.addNewLocation(location);
             event.setLocation(loc);
         }
+    }
+
+    private EventFullDto setComments(Event event) {
+        List<Comment> comments = commentRepository.findAllByEventId(event.getId());
+        EventFullDto dto = mapper.mapEventToEventFullDto(event);
+        dto.setComments(comments.stream()
+                .map(commentMapper::mapCommentToCommentInfoDto)
+                .collect(Collectors.toUnmodifiableList()));
+        return dto;
+    }
+
+    private List<EventFullDto> setComments(List<Event> events) {
+        List<Comment> comments = commentRepository.findAllByEventIdIn(
+                events.stream()
+                        .map(Event::getId)
+                        .collect(Collectors.toUnmodifiableList())
+        );
+        return events.stream()
+                .map(mapper::mapEventToEventFullDto)
+                .peek(dto -> dto.setComments(
+                        comments.stream()
+                                .filter(comment -> comment.getEvent().getId() == dto.getId())
+                                .map(commentMapper::mapCommentToCommentInfoDto)
+                                .collect(Collectors.toUnmodifiableList())
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 }
