@@ -1,11 +1,7 @@
 package ru.practicum.comment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.user.model.dto.UserDto;
 
@@ -15,8 +11,7 @@ import static ru.practicum.constants.Constants.DATE_TIME_FORMAT;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 public class CommentDto {
     private Long id;
